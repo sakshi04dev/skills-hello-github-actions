@@ -4,18 +4,12 @@ on:
     types: [opened]
 permissions:
   pull-requests: write
-
 jobs:
-  comment:
+  build:
+    name: Post welcome comment
     runs-on: ubuntu-latest
     steps:
-      - name: Post comment
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: "Thanks for opening this pull request, you're awesome!"
-            })
+      - run: gh pr comment $PR_URL --body "Welcome to the repository!"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
